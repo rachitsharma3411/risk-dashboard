@@ -1,0 +1,25 @@
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.env
+.venv
+venv/
+env/
+
+# Reports (generated locally — not committed)
+src/reports/output/*.pdf
+
+# SQLite DB — committed so Actions can read history
+# src/snapshots.db  <-- intentionally tracked
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
