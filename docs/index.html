@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Derivatives Risk Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg:       #0a0e17;
+      --surface:  #111827;
+      --surface2: #1a2235;
+      --border:   #1f2d45;
+      --blue:     #3b82f6;
+      --blue-dim: rgba(59,130,246,.12);
+      --green:    #10b981;
+      --green-dim:rgba(16,185,129,.12);
+      --red:      #ef4444;
+      --red-dim:  rgba(239,68,68,.12);
+      --amber:    #f59e0b;
+      --amber-dim:rgba(245,158,11,.12);
+      --text:     #f1f5f9;
+      --muted:    #64748b;
+      --muted2:   #94a3b8;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ── Loader ── */
+    #loader {
+      position: fixed; inset: 0; background: var(--bg);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 14px; z-index: 999;
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid var(--border); border-top-color: var(--blue);
+      border-radius: 50%; animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loader p { color: var(--muted2); font-size: .85rem; }
+
+    /* ── Header ── */
+    header {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 0 32px; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-icon {
+      width: 32px; height: 32px; background: var(--blue-dim);
+      border: 1px solid rgba(59,130,246,.3); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .logo-text { font-size: .95rem; font-weight: 600; letter-spacing: -.2px; }
+    .logo-text span { color: var(--blue); }
+    .header-right { display: flex; align-items: center; gap: 16px; }
+    .live-dot {
+      display: flex; align-items: center; gap: 6px;
+      font-size: .72rem; font-weight: 600; letter-spacing: .6px; color: var(--green);
+    }
+    .live-dot::before {
+      content: ''; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--green); box-shadow: 0 0 6px var(--green);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+    #header-date { font-size: .78rem; color: var(--muted2); }
+    #header-updated { font-size: .72rem; color: var(--muted); }
+
+    /* ── Layout ── */
+    main { max-width: 1440px; margin: 0 auto; padding: 28px 28px 60px; }
+    .section-label {
+      font-size: .68rem; font-weight: 700; letter-spacing: 1.4px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
+    }
+    section { margin-bottom: 36px; }
+
+    /* ── KPI Cards ── */
+    .kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+    @media (max-width: 1100px) { .kpi-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 640px)  { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .kpi {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 18px 20px; position: relative; overflow: hidden;
+      transition: border-color .2s, transform .15s;
+    }
+    .kpi:hover { border-color: var(--blue); transform: translateY(-1px); }
+    .kpi-label { font-size: .68rem; font-weight: 600; letter-spacing: .8px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .kpi-value { font-size: 1.55rem; font-weight: 700; letter-spacing: -.5px; line-height: 1; }
+    .kpi-sub { font-size: .72rem; color: var(--muted); margin-top: 8px; }
+    .kpi-icon { position: absolute; right: 16px; top: 16px; font-size: 1.3rem; opacity: .18; }
+    .kpi-bar { height: 2px; border-radius: 1px; margin-top: 12px; background: var(--border); overflow: hidden; }
+    .kpi-bar-fill { height: 100%; border-radius: 1px; transition: width .8s ease; }
+    .pos { color: var(--green); }
+    .neg { color: var(--red); }
+    .neu { color: var(--text); }
+    .amber { color: var(--amber); }
+
+    /* ── Two-column layout for charts + sidebar ── */
+    .charts-layout { display: grid; grid-template-columns: 1fr 340px; gap: 16px; }
+    @media (max-width: 1000px) { .charts-layout { grid-template-columns: 1fr; } }
+
+    /* ── Chart cards ── */
+    .chart-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px;
+    }
+    .chart-title { font-size: .78rem; font-weight: 600; color: var(--muted2); margin-bottom: 16px; }
+    .chart-wrap { position: relative; height: 200px; }
+
+    /* ── Greeks panel ── */
+    .greeks-panel {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px;
+    }
+    .greek-row { display: flex; flex-direction: column; gap: 6px; }
+    .greek-header { display: flex; justify-content: space-between; align-items: baseline; }
+    .greek-name { font-size: .7rem; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--muted); }
+    .greek-val { font-size: .95rem; font-weight: 700; }
+    .greek-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .greek-fill { height: 100%; border-radius: 2px; transition: width .8s ease; }
+    .fill-ok     { background: var(--green); }
+    .fill-warn   { background: var(--amber); }
+    .fill-breach { background: var(--red); }
+    .greek-meta { display: flex; justify-content: space-between; font-size: .65rem; color: var(--muted); }
+
+    /* ── Bottom row ── */
+    .bottom-layout { display: grid; grid-template-columns: 1fr 320px; gap: 16px; }
+    @media (max-width: 1000px) { .bottom-layout { grid-template-columns: 1fr; } }
+
+    /* ── Positions table ── */
+    .table-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+    }
+    .table-header { padding: 16px 20px; border-bottom: 1px solid var(--border); font-size: .78rem; font-weight: 600; color: var(--muted2); }
+    .table-scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    thead { background: #0d1520; }
+    th {
+      padding: 10px 14px; text-align: right;
+      font-size: .65rem; font-weight: 700; letter-spacing: .8px;
+      text-transform: uppercase; color: var(--muted); white-space: nowrap;
+    }
+    th:first-child, th:nth-child(2), th:nth-child(3) { text-align: left; }
+    tbody tr { border-top: 1px solid var(--border); transition: background .12s; }
+    tbody tr:hover { background: rgba(255,255,255,.025); }
+    td { padding: 10px 14px; white-space: nowrap; text-align: right; }
+    td:first-child, td:nth-child(2), td:nth-child(3) { text-align: left; }
+    .pill {
+      display: inline-block; padding: 2px 7px; border-radius: 4px;
+      font-size: .65rem; font-weight: 700; letter-spacing: .3px;
+    }
+    .pill-call { background: var(--green-dim); color: var(--green); }
+    .pill-put  { background: var(--red-dim);   color: var(--red);   }
+
+    /* ── Right sidebar (market + alerts) ── */
+    .sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+    .panel {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px;
+    }
+    .panel-title { font-size: .78rem; font-weight: 600; color: var(--muted2); margin-bottom: 14px; }
+
+    .market-list { display: flex; flex-direction: column; gap: 8px; }
+    .market-row { display: flex; justify-content: space-between; align-items: center; }
+    .market-ticker { font-size: .8rem; font-weight: 600; }
+    .market-val { font-size: .85rem; font-weight: 700; }
+
+    .alerts-list { display: flex; flex-direction: column; gap: 8px; }
+    .alert-item {
+      background: var(--red-dim); border: 1px solid rgba(239,68,68,.25);
+      border-radius: 8px; padding: 10px 12px; font-size: .78rem;
+      display: flex; gap: 8px; align-items: flex-start;
+    }
+    .alert-icon { flex-shrink: 0; }
+    .no-alerts {
+      background: var(--green-dim); border: 1px solid rgba(16,185,129,.25);
+      border-radius: 8px; padding: 12px; font-size: .78rem; color: var(--green);
+      display: flex; gap: 8px; align-items: center;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center; color: var(--muted); font-size: .7rem;
+      padding: 24px; border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--blue); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="spinner"></div>
+  <p>Loading risk data…</p>
+</div>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">📊</div>
+    <div class="logo-text">Derivatives <span>Risk</span></div>
+  </div>
+  <div class="header-right">
+    <div class="live-dot">LIVE</div>
+    <span id="header-date"></span>
+    <span id="header-updated"></span>
+  </div>
+</header>
+
+<main>
+
+  <!-- KPI Row -->
+  <section>
+    <div class="section-label">Portfolio Overview</div>
+    <div class="kpi-grid" id="kpi-grid"></div>
+  </section>
+
+  <!-- Charts + Greeks -->
+  <section>
+    <div class="section-label">Exposure & History</div>
+    <div class="charts-layout">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="chart-card">
+          <div class="chart-title">Portfolio MtM — 30 Days</div>
+          <div class="chart-wrap"><canvas id="chart-mtm"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">P&amp;L Attribution</div>
+          <div class="chart-wrap"><canvas id="chart-pnl"></canvas></div>
+        </div>
+      </div>
+      <div class="greeks-panel" id="greeks-panel">
+        <div class="chart-title" style="margin-bottom:0">Greek Exposures</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Positions + Sidebar -->
+  <section>
+    <div class="section-label">Positions & Market</div>
+    <div class="bottom-layout">
+      <div class="table-card">
+        <div class="table-header">Open Positions</div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Ticker</th><th>Type</th><th>Expiry</th>
+                <th>Strike</th><th>Qty</th><th>Entry</th><th>Spot</th>
+                <th>Price</th><th>MtM</th><th>P&amp;L</th>
+                <th>Δ$</th><th>V$</th><th>IV</th>
+              </tr>
+            </thead>
+            <tbody id="tbl-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="sidebar">
+        <div class="panel">
+          <div class="panel-title">Market Context</div>
+          <div class="market-list" id="market-list"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Risk Alerts</div>
+          <div id="alerts-box"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Derivatives Risk Dashboard &nbsp;·&nbsp; Black-Scholes + Claude AI &nbsp;·&nbsp;
+  <a href="https://github.com/rachitsharma3411/risk-dashboard" target="_blank">rachitsharma3411/risk-dashboard</a>
+  &nbsp;·&nbsp; Auto-refreshes every 30 min
+</footer>
+
+<script>
+Chart.defaults.color = '#64748b';
+Chart.defaults.borderColor = '#1f2d45';
+Chart.defaults.font.family = 'Inter, -apple-system, sans-serif';
+
+const $ = id => document.getElementById(id);
+const fmt = (v, d=0) => {
+  if (v == null) return '—';
+  const s = v < 0 ? '-$' : '$';
+  return s + Math.abs(v).toLocaleString('en-US', {minimumFractionDigits:d, maximumFractionDigits:d});
+};
+const fmtPct = v => (v >= 0 ? '+' : '') + (v * 100).toFixed(2) + '%';
+const cls = v => v > 0 ? 'pos' : v < 0 ? 'neg' : 'neu';
+
+async function init() {
+  let data;
+  try {
+    const res = await fetch('data.json?t=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    data = await res.json();
+  } catch (e) {
+    $('loader').innerHTML = `<p style="color:var(--red)">Failed to load data.json: ${e.message}</p>`;
+    return;
+  }
+  $('loader').style.display = 'none';
+
+  const cur  = data.portfolio_metrics?.current  || {};
+  const prior = data.portfolio_metrics?.prior   || {};
+  const attr  = data.portfolio_metrics?.PnL_attribution || {};
+  const positions = data.positions || [];
+  const market = data.market_context || {};
+  const alerts = data.alerts || [];
+  const spots  = data.spot_prices || {};
+  const limits = data.limits || { delta_limit: 100000, vega_limit: 200000 };
+  const history = data.history || [];
+
+  // Header
+  $('header-date').textContent = data.report_date || '';
+  if (data.generated_at) {
+    $('header-updated').textContent = 'Updated ' + new Date(data.generated_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  }
+
+  // KPI grid
+  const dailyPnlPct = cur.total_MtM ? cur.daily_PnL / Math.abs(cur.total_MtM) : 0;
+  const kpis = [
+    { label:'Total MtM',   value: fmt(cur.total_MtM),       sub: 'Mark-to-Market',         icon:'💼', vc: cls(cur.total_MtM), pct: null },
+    { label:'Daily P&L',   value: fmt(cur.daily_PnL),       sub: fmtPct(dailyPnlPct),      icon:'📈', vc: cls(cur.daily_PnL), pct: null },
+    { label:'$ Delta',     value: fmt(cur.net_dollar_delta), sub: 'vs prior ' + fmt(prior.net_dollar_delta), icon:'Δ', vc: cls(cur.net_dollar_delta), pct: limits.delta_limit ? Math.min(Math.abs(cur.net_dollar_delta||0)/limits.delta_limit*100,100) : null },
+    { label:'$ Vega',      value: fmt(cur.net_dollar_vega),  sub: 'vs prior ' + fmt(prior.net_dollar_vega),  icon:'ν', vc: 'neu', pct: limits.vega_limit ? Math.min(Math.abs(cur.net_dollar_vega||0)/limits.vega_limit*100,100) : null },
+    { label:'$ Theta',     value: fmt(cur.net_dollar_theta), sub: 'daily decay',            icon:'Θ', vc: cls(cur.net_dollar_theta), pct: null },
+    { label:'Positions',   value: positions.length,          sub: 'open contracts',         icon:'📋', vc: 'neu', pct: null },
+  ];
+  $('kpi-grid').innerHTML = kpis.map(k => `
+    <div class="kpi">
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-value ${k.vc}">${k.value}</div>
+      <div class="kpi-sub">${k.sub}</div>
+      <div class="kpi-icon">${k.icon}</div>
+      ${k.pct != null ? `<div class="kpi-bar"><div class="kpi-bar-fill ${k.pct>90?'fill-breach':k.pct>70?'fill-warn':'fill-ok'}" style="width:${k.pct}%"></div></div>` : ''}
+    </div>`).join('');
+
+  // Greeks panel
+  const greeks = [
+    { name:'Net $ Delta', val: cur.net_dollar_delta, limit: limits.delta_limit },
+    { name:'Net $ Gamma', val: cur.net_dollar_gamma, limit: null },
+    { name:'Net $ Vega',  val: cur.net_dollar_vega,  limit: limits.vega_limit },
+    { name:'Net $ Theta', val: cur.net_dollar_theta, limit: null },
+  ];
+  const greekPanel = $('greeks-panel');
+  greeks.forEach(g => {
+    const pct = g.limit ? Math.min(Math.abs(g.val||0)/g.limit*100, 100) : 0;
+    const breach = g.limit && Math.abs(g.val||0) > g.limit;
+    const warn   = !breach && pct > 70;
+    const fCls   = breach ? 'fill-breach' : warn ? 'fill-warn' : 'fill-ok';
+    const vCls   = breach ? 'neg' : 'neu';
+    const div = document.createElement('div');
+    div.className = 'greek-row';
+    div.innerHTML = `
+      <div class="greek-header">
+        <span class="greek-name">${g.name}</span>
+        <span class="greek-val ${vCls}">${fmt(g.val)}</span>
+      </div>
+      ${g.limit ? `
+        <div class="greek-bar"><div class="greek-fill ${fCls}" style="width:${pct}%"></div></div>
+        <div class="greek-meta"><span>${breach?'⚠ BREACH':'within limit'}</span><span>Limit ${fmt(g.limit)}</span></div>
+      ` : `<div class="greek-meta"><span>no limit set</span></div>`}`;
+    greekPanel.appendChild(div);
+  });
+
+  // MtM chart
+  const labels = history.map(h => h.date.slice(5));
+  new Chart($('chart-mtm'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'MtM ($)',
+        data: history.map(h => h.total_MtM),
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59,130,246,.08)',
+        borderWidth: 2, pointRadius: 3, fill: true, tension: 0.35,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: '#1f2d45' } },
+        y: { grid: { color: '#1f2d45' }, ticks: { callback: v => '$' + (v/1000).toFixed(0)+'k' } }
+      }
+    }
+  });
+
+  // P&L attribution bar chart
+  new Chart($('chart-pnl'), {
+    type: 'bar',
+    data: {
+      labels: ['Delta P&L', 'Vega P&L', 'Theta P&L'],
+      datasets: [{
+        data: [attr.delta_pnl||0, attr.vega_pnl||0, attr.theta_pnl||0],
+        backgroundColor: ['rgba(59,130,246,.7)', 'rgba(16,185,129,.7)', 'rgba(239,68,68,.7)'],
+        borderColor:     ['#3b82f6', '#10b981', '#ef4444'],
+        borderWidth: 1, borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: '#1f2d45' } },
+        y: { grid: { color: '#1f2d45' }, ticks: { callback: v => '$' + (v/1000).toFixed(0)+'k' } }
+      }
+    }
+  });
+
+  // Positions table
+  const sorted = [...positions].sort((a,b) => Math.abs(b.MtM||0) - Math.abs(a.MtM||0));
+  $('tbl-body').innerHTML = sorted.map(p => {
+    const pnlC = cls(p.unrealized_PnL);
+    const qtyC = p.quantity > 0 ? 'pos' : 'neg';
+    return `<tr>
+      <td><strong>${p.ticker}</strong></td>
+      <td><span class="pill pill-${p.option_type}">${p.option_type.toUpperCase()}</span></td>
+      <td>${p.expiry}</td>
+      <td>$${p.strike.toFixed(0)}</td>
+      <td class="${qtyC}">${p.quantity > 0 ? '+' : ''}${p.quantity}</td>
+      <td>$${p.entry_price.toFixed(2)}</td>
+      <td>$${(spots[p.ticker]||0).toFixed(2)}</td>
+      <td>$${(p.current_price||0).toFixed(2)}</td>
+      <td>${fmt(p.MtM)}</td>
+      <td class="${pnlC}">${fmt(p.unrealized_PnL)}</td>
+      <td>${fmt(p.dollar_delta)}</td>
+      <td>${fmt(p.dollar_vega)}</td>
+      <td>${((p.sigma||0)*100).toFixed(1)}%</td>
+    </tr>`;
+  }).join('');
+
+  // Market context
+  $('market-list').innerHTML = Object.entries(market).map(([t, v]) => {
+    const isVix = t === 'VIX';
+    const display = isVix ? v.toFixed(2) : fmtPct(v);
+    const c = isVix ? 'var(--amber)' : v >= 0 ? 'var(--green)' : 'var(--red)';
+    return `<div class="market-row">
+      <span class="market-ticker">${t}</span>
+      <span class="market-val" style="color:${c}">${display}</span>
+    </div>`;
+  }).join('');
+
+  // Alerts
+  $('alerts-box').innerHTML = alerts.length
+    ? `<div class="alerts-list">${alerts.map(a => `
+        <div class="alert-item"><span class="alert-icon">⚠</span><span>${a}</span></div>`).join('')}
+       </div>`
+    : `<div class="no-alerts"><span>✓</span><span>All limits within bounds</span></div>`;
+}
+
+init();
+setInterval(() => location.reload(), 30 * 60 * 1000);
+</script>
+</body>
+</html>

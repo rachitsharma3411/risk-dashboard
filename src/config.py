@@ -1,0 +1,11 @@
+import os
+
+PORTFOLIO_FILE: str = "portfolio.csv"
+CLAUDE_API_KEY: str = os.getenv("ANTHROPIC_API_KEY", "")
+RISK_FREE_RATE_TICKER: str = "^IRX"
+VIX_TICKER: str = "^VIX"
+DELTA_LIMIT: float = 100_000.0
+VEGA_LIMIT: float = 200_000.0
+OPTION_MULTIPLIER: int = 100
+FETCH_RETRIES: int = 3
+FETCH_RETRY_DELAY_SEC: float = 2.0
