@@ -1,5 +1,5 @@
 {
-  "report_date": "2026-06-18",
+  "report_date": "2026-06-19",
   "portfolio_metrics": {
     "current": {
       "net_dollar_delta": 4835.36,
@@ -10,11 +10,11 @@
       "daily_PnL": 670139.82
     },
     "prior": {
-      "net_dollar_delta": 4869.09,
-      "net_dollar_gamma": -0.6823,
-      "net_dollar_vega": -60.03,
-      "net_dollar_theta": 9016.63,
-      "total_MtM": 649525.06,
+      "net_dollar_delta": 4835.36,
+      "net_dollar_gamma": -0.3774,
+      "net_dollar_vega": -26.45,
+      "net_dollar_theta": 5869.19,
+      "total_MtM": 687769.82,
       "daily_PnL": 0
     },
     "PnL_attribution": {
@@ -206,15 +206,15 @@
     }
   ],
   "market_context": {
-    "SPY": 0.007800647930141701,
+    "SPY": 0.010396992441959471,
     "QQQ": 0.025065376405563153,
     "AAPL": 0.0069606267059474985,
-    "VIX": 16.399999618530273
+    "VIX": 16.780000686645508
   },
   "alerts": [
-    "NEAR EXPIRY: SPY CALL K=600 in 1d",
-    "NEAR EXPIRY: AAPL CALL K=230 in 1d",
-    "NEAR EXPIRY: SPY PUT K=520 in 1d"
+    "NEAR EXPIRY: SPY CALL K=600 in 0d",
+    "NEAR EXPIRY: AAPL CALL K=230 in 0d",
+    "NEAR EXPIRY: SPY PUT K=520 in 0d"
   ],
   "is_first_run": false,
   "spot_prices": {
@@ -227,14 +227,6 @@
     "vega_limit": 200000.0
   },
   "history": [
-    {
-      "date": "2026-05-08",
-      "total_MtM": 627301.21,
-      "daily_PnL": 609671.21,
-      "net_dollar_delta": 4869.2,
-      "net_dollar_vega": -175.42,
-      "net_dollar_theta": 5946.23
-    },
     {
       "date": "2026-05-11",
       "total_MtM": 630759.91,
@@ -466,7 +458,15 @@
       "net_dollar_delta": 4835.36,
       "net_dollar_vega": -26.45,
       "net_dollar_theta": 5869.19
+    },
+    {
+      "date": "2026-06-19",
+      "total_MtM": 687769.82,
+      "daily_PnL": 670139.82,
+      "net_dollar_delta": 4835.36,
+      "net_dollar_vega": -26.45,
+      "net_dollar_theta": 5869.19
     }
   ],
-  "generated_at": "2026-06-18T23:18:36Z"
+  "generated_at": "2026-06-19T22:31:12Z"
 }
