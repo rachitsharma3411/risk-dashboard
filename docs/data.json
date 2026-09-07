@@ -1,5 +1,5 @@
 {
-  "report_date": "2026-09-04",
+  "report_date": "2026-09-07",
   "portfolio_metrics": {
     "current": {
       "net_dollar_delta": 4832.46,
@@ -10,11 +10,11 @@
       "daily_PnL": 725444.12
     },
     "prior": {
-      "net_dollar_delta": 4832.12,
-      "net_dollar_gamma": -0.3148,
-      "net_dollar_vega": -25.42,
-      "net_dollar_theta": 6066.37,
-      "total_MtM": 763299.12,
+      "net_dollar_delta": 4832.46,
+      "net_dollar_gamma": -0.3211,
+      "net_dollar_vega": -25.53,
+      "net_dollar_theta": 6043.77,
+      "total_MtM": 743074.12,
       "daily_PnL": 0
     },
     "PnL_attribution": {
@@ -209,7 +209,7 @@
     "SPY": -0.0038542371465761873,
     "QQQ": 0.0017975379954848934,
     "AAPL": -0.025105848234065115,
-    "VIX": 14.529999732971191
+    "VIX": 15.300000190734863
   },
   "alerts": [],
   "is_first_run": false,
@@ -223,14 +223,6 @@
     "vega_limit": 200000.0
   },
   "history": [
-    {
-      "date": "2026-07-23",
-      "total_MtM": 666210.4,
-      "daily_PnL": 648580.4,
-      "net_dollar_delta": 4836.56,
-      "net_dollar_vega": -26.82,
-      "net_dollar_theta": 5791.35
-    },
     {
       "date": "2026-07-24",
       "total_MtM": 681915.59,
@@ -462,7 +454,15 @@
       "net_dollar_delta": 4832.46,
       "net_dollar_vega": -25.53,
       "net_dollar_theta": 6043.77
+    },
+    {
+      "date": "2026-09-07",
+      "total_MtM": 743074.12,
+      "daily_PnL": 725444.12,
+      "net_dollar_delta": 4832.46,
+      "net_dollar_vega": -25.53,
+      "net_dollar_theta": 6043.77
     }
   ],
-  "generated_at": "2026-09-04T23:11:39Z"
+  "generated_at": "2026-09-07T23:39:57Z"
 }
