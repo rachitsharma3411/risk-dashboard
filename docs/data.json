@@ -1,26 +1,26 @@
 {
-  "report_date": "2026-10-16",
+  "report_date": "2026-10-20",
   "portfolio_metrics": {
     "current": {
+      "net_dollar_delta": 4832.89,
+      "net_dollar_gamma": -0.3291,
+      "net_dollar_vega": -25.67,
+      "net_dollar_theta": 5999.27,
+      "total_MtM": 785043.02,
+      "daily_PnL": 767413.02
+    },
+    "prior": {
       "net_dollar_delta": 4833.27,
       "net_dollar_gamma": -0.3363,
       "net_dollar_vega": -25.79,
       "net_dollar_theta": 5975.4,
       "total_MtM": 771017.73,
-      "daily_PnL": 753387.73
-    },
-    "prior": {
-      "net_dollar_delta": 4832.28,
-      "net_dollar_gamma": -0.3177,
-      "net_dollar_vega": -25.47,
-      "net_dollar_theta": 6037.6,
-      "total_MtM": 802602.68,
       "daily_PnL": 0
     },
     "PnL_attribution": {
-      "delta_pnl": 747438.11,
-      "vega_pnl": -25.79,
-      "theta_pnl": 5975.4
+      "delta_pnl": 761439.42,
+      "vega_pnl": -25.67,
+      "theta_pnl": 5999.27
     }
   },
   "positions": [
@@ -31,16 +31,16 @@
       "expiry": "2026-04-17",
       "quantity": 10,
       "entry_price": 8.5,
-      "S": 763.25,
+      "S": 766.48,
       "T": 0.0027397260273972603,
       "sigma": 0.2,
-      "current_price": 183.31467036966876,
-      "MtM": 183314.67036966875,
-      "unrealized_PnL": 174814.67036966875,
+      "current_price": 186.5447498071012,
+      "MtM": 186544.7498071012,
+      "unrealized_PnL": 178044.7498071012,
       "dollar_delta": 1000.0,
-      "dollar_gamma": 1.414557073788152e-148,
-      "dollar_vega": 4.515348049444613e-148,
-      "dollar_theta": -64.66676414103958
+      "dollar_gamma": 3.2786191748314033e-153,
+      "dollar_vega": 1.0554307908699377e-152,
+      "dollar_theta": -64.74619271019705
     },
     {
       "ticker": "SPY",
@@ -49,16 +49,16 @@
       "expiry": "2026-04-17",
       "quantity": -5,
       "entry_price": 6.2,
-      "S": 763.25,
+      "S": 766.48,
       "T": 0.0027397260273972603,
-      "sigma": 4.804505453174245,
-      "current_price": 6.199998980029783,
-      "MtM": -3099.9994900148913,
-      "unrealized_PnL": 0.0005099851088097296,
-      "dollar_delta": 33.26734626828021,
-      "dollar_gamma": -0.33632249931540725,
-      "dollar_vega": -25.78964558476927,
-      "dollar_theta": 6192.147666972341
+      "sigma": 4.846030549472479,
+      "current_price": 6.2000003811743625,
+      "MtM": -3100.0001905871814,
+      "unrealized_PnL": -0.00019058718114806084,
+      "dollar_delta": 32.88547402424469,
+      "dollar_gamma": -0.3290792367479493,
+      "dollar_vega": -25.668200252896984,
+      "dollar_theta": 6216.283932001613
     },
     {
       "ticker": "SPY",
@@ -67,16 +67,16 @@
       "expiry": "2026-06-19",
       "quantity": 5,
       "entry_price": 5.8,
-      "S": 763.25,
+      "S": 766.48,
       "T": 0.0027397260273972603,
       "sigma": 0.2,
-      "current_price": 163.31690038241595,
-      "MtM": 81658.45019120797,
-      "unrealized_PnL": 78758.45019120797,
+      "current_price": 166.54698255907022,
+      "MtM": 83273.49127953511,
+      "unrealized_PnL": 80373.4912795351,
       "dollar_delta": 500.0,
-      "dollar_gamma": 3.029198031080395e-114,
-      "dollar_vega": 9.669375435231653e-114,
-      "dollar_theta": -33.44832627984807
+      "dollar_gamma": 2.5928172045098036e-118,
+      "dollar_vega": 8.346620838870938e-118,
+      "dollar_theta": -33.489410022515706
     },
     {
       "ticker": "QQQ",
@@ -85,16 +85,16 @@
       "expiry": "2026-04-17",
       "quantity": 8,
       "entry_price": 7.3,
-      "S": 709.7999877929688,
+      "S": 718.36,
       "T": 0.0027397260273972603,
       "sigma": 0.2,
-      "current_price": 219.85462310527515,
-      "MtM": 175883.69848422013,
-      "unrealized_PnL": 170043.6984842201,
+      "current_price": 228.41470242324067,
+      "MtM": 182731.76193859254,
+      "unrealized_PnL": 176891.76193859254,
       "dollar_delta": 800.0,
-      "dollar_gamma": 1.89549562430886e-271,
-      "dollar_vega": 5.232772966736337e-271,
-      "dollar_theta": -43.70581300566814
+      "dollar_gamma": 2.371029749407936e-289,
+      "dollar_vega": 6.704376851279375e-289,
+      "dollar_theta": -43.759495762753865
     },
     {
       "ticker": "QQQ",
@@ -103,7 +103,7 @@
       "expiry": "2026-04-17",
       "quantity": -3,
       "entry_price": 5.1,
-      "S": 709.7999877929688,
+      "S": 718.36,
       "T": 0.0027397260273972603,
       "sigma": 0.2,
       "current_price": 0.0,
@@ -121,16 +121,16 @@
       "expiry": "2026-05-15",
       "quantity": 4,
       "entry_price": 4.9,
-      "S": 709.7999877929688,
+      "S": 718.36,
       "T": 0.0027397260273972603,
       "sigma": 0.2,
-      "current_price": 199.85685311802234,
-      "MtM": 79942.74124720893,
-      "unrealized_PnL": 77982.74124720893,
+      "current_price": 208.4169351752097,
+      "MtM": 83366.77407008388,
+      "unrealized_PnL": 81406.77407008388,
       "dollar_delta": 400.0,
-      "dollar_gamma": 3.8261598494957e-216,
-      "dollar_vega": 1.0562633630005521e-215,
-      "dollar_theta": -22.744861870296685
+      "dollar_gamma": 3.806262762671384e-232,
+      "dollar_vega": 1.0762673881385465e-231,
+      "dollar_theta": -22.77279881531068
     },
     {
       "ticker": "AAPL",
@@ -139,16 +139,16 @@
       "expiry": "2026-04-17",
       "quantity": 15,
       "entry_price": 4.2,
-      "S": 343.4599914550781,
+      "S": 342.94,
       "T": 0.0027397260273972603,
       "sigma": 0.2,
-      "current_price": 123.48452159529731,
-      "MtM": 185226.78239294596,
-      "unrealized_PnL": 178926.78239294596,
+      "current_price": 122.96456027165908,
+      "MtM": 184446.8404074886,
+      "unrealized_PnL": 178146.8404074886,
       "dollar_delta": 1500.0,
       "dollar_gamma": 0.0,
       "dollar_vega": 0.0,
-      "dollar_theta": -36.793158907832876
+      "dollar_theta": -36.838351024767285
     },
     {
       "ticker": "AAPL",
@@ -157,7 +157,7 @@
       "expiry": "2026-04-17",
       "quantity": -8,
       "entry_price": 3.8,
-      "S": 343.4599914550781,
+      "S": 342.94,
       "T": 0.0027397260273972603,
       "sigma": 0.2,
       "current_price": 0.0,
@@ -175,16 +175,16 @@
       "expiry": "2026-06-19",
       "quantity": 6,
       "entry_price": 5.6,
-      "S": 343.4599914550781,
+      "S": 342.94,
       "T": 0.0027397260273972603,
       "sigma": 0.2,
-      "current_price": 113.48563660167093,
-      "MtM": 68091.38196100255,
-      "unrealized_PnL": 64731.38196100256,
+      "current_price": 112.96567664764359,
+      "MtM": 67779.40598858615,
+      "unrealized_PnL": 64419.405988586164,
       "dollar_delta": 600.0,
-      "dollar_gamma": 8.92579e-318,
-      "dollar_vega": 5.76871e-318,
-      "dollar_theta": -15.38623008873011
+      "dollar_gamma": 2.26580185e-315,
+      "dollar_vega": 1.46014481e-315,
+      "dollar_theta": -15.405128610357227
     },
     {
       "ticker": "SPY",
@@ -193,44 +193,36 @@
       "expiry": "2026-06-19",
       "quantity": -4,
       "entry_price": 8.9,
-      "S": 763.25,
+      "S": 766.48,
       "T": 0.0027397260273972603,
       "sigma": 0.2,
-      "current_price": 2.0485483217292547e-295,
-      "MtM": -8.194193286917019e-293,
+      "current_price": 6.96869055298258e-302,
+      "MtM": -2.787476221193032e-299,
       "unrealized_PnL": 3560.0,
       "dollar_delta": -0.0,
-      "dollar_gamma": -1.7296942037066807e-291,
-      "dollar_vega": -5.521284007245569e-291,
-      "dollar_theta": 5.518078262927627e-290
+      "dollar_gamma": -5.963331683570987e-298,
+      "dollar_vega": -1.9196751862267557e-297,
+      "dollar_theta": 1.9185713510678515e-296
     }
   ],
   "market_context": {
-    "SPY": -0.011065157971047386,
-    "QQQ": -0.02500001676790007,
-    "AAPL": 0.004268980862801535,
-    "VIX": 19.989999771118164
+    "SPY": NaN,
+    "QQQ": NaN,
+    "AAPL": NaN,
+    "VIX": 18.440000534057617
   },
   "alerts": [],
   "is_first_run": false,
   "spot_prices": {
-    "SPY": 763.25,
-    "QQQ": 709.7999877929688,
-    "AAPL": 343.4599914550781
+    "SPY": 766.48,
+    "QQQ": 718.36,
+    "AAPL": 342.94
   },
   "limits": {
     "delta_limit": 100000.0,
     "vega_limit": 200000.0
   },
   "history": [
-    {
-      "date": "2026-09-03",
-      "total_MtM": 763299.12,
-      "daily_PnL": 745669.12,
-      "net_dollar_delta": 4832.12,
-      "net_dollar_vega": -25.42,
-      "net_dollar_theta": 6066.37
-    },
     {
       "date": "2026-09-04",
       "total_MtM": 743074.12,
@@ -462,7 +454,15 @@
       "net_dollar_delta": 4833.27,
       "net_dollar_vega": -25.79,
       "net_dollar_theta": 5975.4
+    },
+    {
+      "date": "2026-10-20",
+      "total_MtM": 785043.02,
+      "daily_PnL": 767413.02,
+      "net_dollar_delta": 4832.89,
+      "net_dollar_vega": -25.67,
+      "net_dollar_theta": 5999.27
     }
   ],
-  "generated_at": "2026-10-16T23:46:16Z"
+  "generated_at": "2026-10-20T00:32:21Z"
 }
